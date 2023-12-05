@@ -1,1 +1,4 @@
-# Long-tailed-Data-Distillation
+# Dataset distillation in Longtail data
+
+
+
