@@ -51,7 +51,7 @@ def main():
     if not os.path.exists(args.save_path):
         os.mkdir(args.save_path)
 
-    eval_it_pool = np.arange(2000, args.Iteration+1, 2000).tolist() if args.eval_mode == 'S' or args.eval_mode == 'SS' else [args.Iteration] # The list of iterations when we evaluate models and record results.
+    eval_it_pool = np.arange(0, args.Iteration+1, 2000).tolist() if args.eval_mode == 'S' or args.eval_mode == 'SS' else [args.Iteration] # The list of iterations when we evaluate models and record results.
     logger.info('eval_it_pool: %s', eval_it_pool)
     channel, im_size, num_classes, class_names, mean, std, dst_train, dst_test, testloader = get_dataset(args.dataset, args.data_path, logger, args.imb_type, args.imb_factor)
     model_eval_pool = get_eval_pool(args.eval_mode, args.model, args.model, logger)
@@ -150,7 +150,9 @@ def main():
                             image_syn_eval = torch.cat((image_syn_eval, images_all_res), dim=0).to(args.device)
                             label_syn_eval = torch.cat((label_syn_eval, labels_all_res), dim = 0).to(args.device)
                         if it == args.Iteration and it_eval == args.num_eval - 1:
-                            _, acc_train, acc_test = evaluate_synset(it_eval, net_eval, image_syn_eval, label_syn_eval, testloader, args, output_channel, logger, True)
+                            _, acc_train, acc_test = evaluate_synset(it_eval, net_eval, image_syn_eval, label_syn_eval, testloader, args, output_channel, logger, True, "_" + args.dataset + "_" + str(args.imb_factor) + "_final")
+                        elif it == 0 and it_eval == 0:
+                            _, acc_train, acc_test = evaluate_synset(it_eval, net_eval, image_syn_eval, label_syn_eval, testloader, args, output_channel, logger, True, "_" + args.dataset + "_" + str(args.imb_factor) + "_basline")
                         else:
                             _, acc_train, acc_test = evaluate_synset(it_eval, net_eval, image_syn_eval, label_syn_eval, testloader, args, output_channel, logger, False)
                         accs.append(acc_test)

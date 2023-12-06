@@ -458,7 +458,7 @@ def get_class_wise_acc(dataloader, net, args, num_classes, aug):
     return class_accuracies, class_correct, class_total
  
 
-def evaluate_synset(it_eval, net, images_train, labels_train, testloader, args, num_classes, logger, if_write_csv = False):
+def evaluate_synset(it_eval, net, images_train, labels_train, testloader, args, num_classes, logger, if_write_csv = False, csv_name = ""):
     net = net.to(args.device)
     images_train = images_train.to(args.device)
     labels_train = labels_train.to(args.device)
@@ -489,7 +489,7 @@ def evaluate_synset(it_eval, net, images_train, labels_train, testloader, args, 
         class_accuracies, class_correct, class_total = get_class_wise_acc(testloader, net, args, num_classes = num_classes, aug = False)
         data = zip(class_accuracies, class_correct, class_total)
         # 定义要保存的文件路径
-        csv_file = 'class_metrics.csv'
+        csv_file = 'class_metrics' + csv_name + '.csv'  
 
         # 写入CSV文件
         with open(csv_file, mode='w', newline='') as file:
