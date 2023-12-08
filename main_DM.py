@@ -142,7 +142,8 @@ def main():
                             output_channel = 10
                         net_eval = get_network(model_eval, channel, output_channel, im_size).to(args.device) # get a random model
                         if args.add_pretrain == 'T':
-                            checkpoint = torch.load('SimCLR/log/checkpoint_0100.pth.tar')
+                            checkpoint = torch.load('SimCLR/log/checkpoint_' + args.dataset  + '.pth.tar')
+                            # print(checkpoint['state_dict'].keys())
                             net_eval.load_state_dict(checkpoint['state_dict'])
                         
                         image_syn_eval, label_syn_eval = copy.deepcopy(image_syn.detach()), copy.deepcopy(label_syn.detach()) # avoid any unaware modification
@@ -178,7 +179,8 @@ def main():
             for param in list(net.parameters()):
                 param.requires_grad = False
 
-            embed = net.module.embed if torch.cuda.device_count() > 1 else net.embed # for GPU parallel
+            # embed = net.module.embed if torch.cuda.device_count() > 1 else net.embed # for GPU parallel
+            embed =  net.embed # for GPU parallel
 
             loss_avg = 0
 

@@ -315,8 +315,8 @@ def get_network(model, channel, num_classes, im_size=(32, 32)):
     gpu_num = torch.cuda.device_count()
     if gpu_num>0:
         device = 'cuda'
-        if gpu_num>1:
-            net = nn.DataParallel(net)
+        # if gpu_num>1:
+        #     net = nn.DataParallel(net)
     else:
         device = 'cpu'
     net = net.to(device)
@@ -452,8 +452,7 @@ def get_class_wise_acc(dataloader, net, args, num_classes, aug):
         for i in range(len(preds)):
             class_correct[lab[i]] += int(preds[i] == lab[i])
             class_total[lab[i]] += 1
-        
-        class_accuracies = class_correct / class_total
+    class_accuracies = class_correct / class_total
 
     return class_accuracies, class_correct, class_total
  
