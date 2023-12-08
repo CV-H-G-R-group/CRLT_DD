@@ -43,7 +43,7 @@ def main():
     args.dsa_param = ParamDiffAug()
     args.dsa = False if args.dsa_strategy in ['none', 'None'] else True
 
-    logger = setup_logs('logger', args.dataset)
+    logger = setup_logs('logger', args.dataset +  "_" + str(args.imb_factor) + "_ss_" + args.add_pretrain + "_partial_" + args.partial_condense)
 
     if not os.path.exists(args.data_path):
         os.mkdir(args.data_path)
@@ -180,7 +180,7 @@ def main():
                 param.requires_grad = False
 
             # embed = net.module.embed if torch.cuda.device_count() > 1 else net.embed # for GPU parallel
-            embed =  net.embed # for GPU parallel
+            embed =  net.embed
 
             loss_avg = 0
 
@@ -195,16 +195,22 @@ def main():
                     seed = int(time.time() * 1000) % 100000
                     img_real = DiffAugment(img_real, args.dsa_strategy, seed=seed, param=args.dsa_param)
                     img_syn = DiffAugment(img_syn, args.dsa_strategy, seed=seed, param=args.dsa_param)
-
+                
                 output_real = embed(img_real).detach()
                 output_syn = embed(img_syn)
 
-                loss += torch.sum((torch.mean(output_real, dim=0) - torch.mean(output_syn, dim=0))**2)
+                # loss += torch.sum((torch.mean(output_real, dim=0) - torch.mean(output_syn, dim=0))**2)
+                loss = torch.sum((torch.mean(output_real, dim=0) - torch.mean(output_syn, dim=0))**2)
+                
+                optimizer_img.zero_grad()
+                loss.backward()
+                optimizer_img.step()
+                loss_avg += loss.item()
 
-            optimizer_img.zero_grad()
-            loss.backward()
-            optimizer_img.step()
-            loss_avg += loss.item()
+            # optimizer_img.zero_grad()
+            # loss.backward()
+            # optimizer_img.step()
+            # loss_avg += loss.item()
 
 
             loss_avg /= (num_classes)
