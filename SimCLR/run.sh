@@ -1,1 +1,0 @@
-python run.py -data ../data -dataset CIFAR10-LT --log-every-n-steps 100 --epochs 100 --out_dim 2048 --workers 0
