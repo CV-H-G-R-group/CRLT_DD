@@ -20,8 +20,10 @@ python main_DM.py  --dataset [CIFAR10-head/CIFAR100-head] --imb_factor [0.1/0.2/
 
 ## References
 
-Our code refers the following repositores:
+Our code refers the following repositories:
 
 - [DatasetCondensation](https://github.com/VICO-UoE/DatasetCondensation)
 
 - [MiSLAS](https://github.com/dvlab-research/MiSLAS/blob/main/datasets/cifar10.py)
+
+- [SimCLR](https://github.com/sthalles/SimCLR)
