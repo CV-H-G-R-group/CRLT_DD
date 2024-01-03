@@ -36,6 +36,9 @@ def main():
     parser.add_argument('--imb_type', type=str, default='exp',help='exp or step')
     parser.add_argument('--imb_factor', type=float, default= 0.01,help='try in (0,1]')
     parser.add_argument('--add_pretrain', type=str, default='F', help='T or F')
+    parser.add_argument('--add_aug', type=str, default='F', help='T or F')
+    parser.add_argument('--aug_size', type=int, default=100, help='augmentation')
+
 
     args = parser.parse_args()
     args.method = 'DM'
@@ -150,6 +153,19 @@ def main():
                         if args.partial_condense == 'T':
                             image_syn_eval = torch.cat((image_syn_eval, images_all_res), dim=0).to(args.device)
                             label_syn_eval = torch.cat((label_syn_eval, labels_all_res), dim = 0).to(args.device)
+                        if args.add_aug == 'T' and args.partial_condense == 'F':
+                            aug_time = args.aug_size // args.ipc
+                            
+                            images_train_init = image_syn_eval
+                            labels_train_init = label_syn_eval
+                            for _ in range(aug_time):
+                                for image, label in zip(images_train_init, labels_train_init):
+                                    img = image.unsqueeze(0)
+                                    img = DiffAugment(img, args.dsa_strategy, param=args.dsa_param)
+                                    image_syn_eval = torch.cat((image_syn_eval, img), dim=0)
+                                    label = label.unsqueeze(0)
+                                    label_syn_eval = torch.cat((label_syn_eval, label), dim=0)
+
                         if it == args.Iteration and it_eval == args.num_eval - 1:
                             _, acc_train, acc_test = evaluate_synset(it_eval, net_eval, image_syn_eval, label_syn_eval, testloader, args, output_channel, logger, True, "_" + args.dataset + "_" + str(args.imb_factor) + "_final")
                         elif it == 0 and it_eval == 0:
