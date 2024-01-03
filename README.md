@@ -2,7 +2,7 @@
 
 > SJTU Course CS348: Computer Vision (2023 Fall) Team A Project
 
-<img src="images/CRLT_DD_overview.png">
+<img src="CRLT_DD.png">
 
 ## Set Up
 
