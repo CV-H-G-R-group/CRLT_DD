@@ -4,6 +4,10 @@
 
 <img src="images/CRLT_DD_overview.png">
 
+## Set Up
+
+Install pre-requirements by `pip install -r requirements.txt`.
+
 ## Usage
 
 #### Baseline
