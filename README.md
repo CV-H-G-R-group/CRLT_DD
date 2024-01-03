@@ -24,4 +24,4 @@ Our code refers the following repositores:
 
 - [DatasetCondensation](https://github.com/VICO-UoE/DatasetCondensation)
 
-- 
+- [MiSLAS](https://github.com/dvlab-research/MiSLAS/blob/main/datasets/cifar10.py)
